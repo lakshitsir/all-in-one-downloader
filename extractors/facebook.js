@@ -1,26 +1,20 @@
-export default async function facebook(url) {
-  const headers = {
-    "user-agent": "Mozilla/5.0",
-    "origin": "https://fbdown.blog",
-    "referer": "https://fbdown.blog/"
-  };
+import fetch from "node-fetch";
 
+export default async function facebook(url) {
   const res = await fetch("https://fbdown.blog/get.php", {
     method: "POST",
     headers: {
       "content-type": "application/x-www-form-urlencoded",
-      ...headers
+      "user-agent": "Mozilla/5.0"
     },
     body: new URLSearchParams({ url })
   });
 
-  const text = await res.text();
-
-  const match = text.match(/href="(https:\/\/[^"]+\.mp4[^"]*)"/);
-  if (!match) throw new Error("No Facebook video found");
+  const html = await res.text();
+  const match = html.match(/href="(https:\/\/[^"]+\.mp4[^"]*)"/);
+  if (!match) throw new Error("Facebook video not found");
 
   return {
-    platform: "facebook",
     title: "Facebook Video",
     quality: "HD",
     size: "Unknown",
