@@ -1,23 +1,20 @@
-export default async function pinterest(url) {
-  const apiUrl = "https://www.expertstool.com/converter.php";
+import fetch from "node-fetch";
 
-  const res = await fetch(apiUrl, {
+export default async function pinterest(url) {
+  const res = await fetch("https://www.expertstool.com/converter.php", {
     method: "POST",
     headers: {
       "content-type": "application/x-www-form-urlencoded",
-      "origin": "https://www.expertstool.com",
-      "referer": "https://www.expertstool.com/download-pinterest-video-online/"
+      "user-agent": "Mozilla/5.0"
     },
     body: new URLSearchParams({ url })
   });
 
   const html = await res.text();
   const match = html.match(/href="(https:\/\/v\.pinimg\.com[^"]+)"/);
-
-  if (!match) throw new Error("No Pinterest media found");
+  if (!match) throw new Error("Pinterest media not found");
 
   return {
-    platform: "pinterest",
     title: "Pinterest Video",
     quality: "HD",
     size: "Unknown",
